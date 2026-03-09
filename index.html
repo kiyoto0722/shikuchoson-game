@@ -5,18 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>市区町村ここどこ？</title>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
-
 body{
 font-family:sans-serif;
 text-align:center;
 margin:0;
-background:#f5f5f5;
+background:#f2f2f2;
+}
+
+#top{
+padding:10px;
 }
 
 #map{
@@ -30,164 +31,39 @@ margin:10px;
 }
 
 #question{
-font-size:22px;
+font-size:20px;
 margin:10px;
 }
 
+#result{
+font-size:18px;
+margin:10px;
+}
 </style>
 
 </head>
 
 <body>
 
+<div id="top">
+
 <h2>市区町村ここどこ？</h2>
 
+<select id="pref">
+<option value="tokyo">東京都</option>
+</select>
+
+<button onclick="startGame()">スタート</button>
+
 <div id="question"></div>
+
+</div>
 
 <div id="map"></div>
 
 <div id="result"></div>
 
-<button onclick="startGame()">スタート</button>
-
-<script>
-
-let map = L.map('map').setView([35.68,139.76],10);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{ attribution:'© OpenStreetMap'}
-).addTo(map);
-
-
-let score = 0
-let question = 0
-let answer = null
-let geoLayer
-
-
-async function startGame(){
-
-score = 0
-question = 0
-
-loadQuestion()
-
-}
-
-
-async function loadQuestion(){
-
-document.getElementById("result").innerHTML=""
-
-question++
-
-if(question>5){
-
-showResult()
-return
-
-}
-
-let data = await fetch(
-"https://raw.githubusercontent.com/smartnews-smri/japan-topography/main/data/municipality/tokyo.geojson"
-)
-
-let geo = await data.json()
-
-let features = geo.features
-
-answer = features[Math.floor(Math.random()*features.length)]
-
-document.getElementById("question").innerHTML =
-"問題 "+question+"/5<br><b>"+answer.properties.name+"</b>"
-
-if(geoLayer){
-map.removeLayer(geoLayer)
-}
-
-geoLayer = L.geoJSON(geo,{
-
-style:{
-color:"#333",
-weight:1,
-fillColor:"#ddd",
-fillOpacity:0.7
-},
-
-onEachFeature:function(feature,layer){
-
-layer.on("click",function(){
-
-if(answer.properties.name == feature.properties.name){
-
-score++
-
-layer.setStyle({fillColor:"green"})
-
-document.getElementById("result").innerHTML="⭕ 正解"
-
-}else{
-
-layer.setStyle({fillColor:"red"})
-
-document.getElementById("result").innerHTML=
-"❌ 不正解<br>正解："+answer.properties.name
-
-}
-
-setTimeout(loadQuestion,1500)
-
-})
-
-}
-
-}).addTo(map)
-
-}
-
-
-function showResult(){
-
-let rank="D"
-
-if(score==5) rank="S 日本地理神"
-else if(score==4) rank="A 地理つよい"
-else if(score==3) rank="B 普通"
-else if(score==2) rank="C 要勉強"
-
-document.getElementById("question").innerHTML="結果"
-
-document.getElementById("result").innerHTML=
-score+"/5 正解<br><br>ランク "+rank+
-"<br><br><button onclick='share()'>シェア</button>"
-
-}
-
-
-function share(){
-
-let text =
-"市区町村ここどこ？\\n"+
-score+"/5 正解！"
-
-if(navigator.share){
-
-navigator.share({
-title:"市区町村クイズ",
-text:text,
-url:location.href
-})
-
-}else{
-
-alert(text)
-
-}
-
-}
-
-</script>
+<script src="game.js"></script>
 
 </body>
 </html>
