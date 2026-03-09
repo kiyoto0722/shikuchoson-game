@@ -2,68 +2,32 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>市区町村ここどこ？</title>
+<title>東京都 市区町村当てゲーム</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="style.css">
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<style>
-body{
-font-family:sans-serif;
-text-align:center;
-margin:0;
-background:#f2f2f2;
-}
-
-#top{
-padding:10px;
-}
-
-#map{
-height:70vh;
-}
-
-button{
-font-size:18px;
-padding:10px 20px;
-margin:10px;
-}
-
-#question{
-font-size:20px;
-margin:10px;
-}
-
-#result{
-font-size:18px;
-margin:10px;
-}
-</style>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 
 </head>
 
 <body>
 
-<div id="top">
+<h1>東京都 市区町村当てゲーム</h1>
 
-<h2>市区町村ここどこ？</h2>
+<div id="question">スタートを押してください</div>
 
-<select id="pref">
-<option value="tokyo">東京都</option>
-</select>
-
-<button onclick="startGame()">スタート</button>
-
-<div id="question"></div>
-
-</div>
+<button id="startBtn">スタート</button>
 
 <div id="map"></div>
 
-<div id="result"></div>
-
-<script src="game.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
