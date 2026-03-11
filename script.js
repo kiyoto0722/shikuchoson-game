@@ -1,9 +1,5 @@
 let map = L.map('map').setView([35.68,139.7],10);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© OpenStreetMap'
-}).addTo(map);
-
 let geoLayer;
 let cities = [];
 let currentCity = null;
