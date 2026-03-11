@@ -1,71 +1,116 @@
 let map = L.map('map').setView([35.68,139.7],10);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© OpenStreetMap'
+ attribution:'© OpenStreetMap'
 }).addTo(map);
 
 let geoLayer;
 let cities = [];
 let currentCity = null;
+
 let questionCount = 0;
 let correctCount = 0;
-let maxQuestion = 5;
+const maxQuestion = 5;
+
+let gameReady = false;
 
 fetch("tokyo_cities.geojson")
 .then(res=>res.json())
 .then(data=>{
 
-    geoLayer = L.geoJSON(data,{
-        style:{
-            color:"#006400",
-            weight:1,
-            fillColor:"#00aa00",
-            fillOpacity:0.5
-        },
-        onEachFeature:(feature,layer)=>{
+ geoLayer = L.geoJSON(data,{
+  style:{
+   color:"#006400",
+   weight:1,
+   fillColor:"#00aa00",
+   fillOpacity:0.5
+  },
+  onEachFeature:(feature,layer)=>{
 
-            cities.push(feature);
+   cities.push(feature);
 
-            layer.on("click",()=>{
+   layer.on("click",()=>{
 
-                if(!currentCity) return;
+    if(!currentCity) return;
 
-                let name = feature.properties.N03_004;
+    const name = feature.properties.N03_004;
 
-                if(name===currentCity){
+    if(name===currentCity){
 
-                    layer.setStyle({
-                        fillColor:"#00ff00"
-                    });
+     layer.setStyle({fillColor:"#00ff00"});
+     correctCount++;
+     alert("正解！");
 
-                    correctCount++;
+    }else{
 
-                    alert("正解！ "+name);
+     layer.setStyle({fillColor:"#ff0000"});
+     alert("不正解 正解は "+currentCity);
 
-                }else{
+    }
 
-                    layer.setStyle({
-                        fillColor:"#ff0000"
-                    });
+    questionCount++;
 
-                    alert("不正解 正解は "+currentCity);
-                }
+    if(questionCount>=maxQuestion){
 
-                questionCount++;
+     setTimeout(showResult,500);
 
-                if(questionCount>=maxQuestion){
+    }else{
 
-                    setTimeout(showResult,500);
+     setTimeout(nextQuestion,500);
 
-                }else{
+    }
 
-                    setTimeout(nextQuestion,500);
-                }
+   });
 
-            });
+  }
 
-        }
+ }).addTo(map);
 
+ gameReady = true;
+
+});
+
+function startGame(){
+
+ if(!gameReady){
+  alert("地図読み込み中です");
+  return;
+ }
+
+ questionCount=0;
+ correctCount=0;
+
+ nextQuestion();
+}
+
+function nextQuestion(){
+
+ geoLayer.resetStyle();
+
+ const r = Math.floor(Math.random()*cities.length);
+
+ currentCity = cities[r].properties.N03_004;
+
+ document.getElementById("question").innerText =
+ "第"+(questionCount+1)+"問 : "+currentCity;
+
+}
+
+function showResult(){
+
+ let rank="D";
+
+ if(correctCount==5) rank="S";
+ else if(correctCount>=4) rank="A";
+ else if(correctCount>=3) rank="B";
+ else if(correctCount>=2) rank="C";
+
+ document.getElementById("question").innerText =
+ "終了 "+correctCount+"/5 正解 ランク "+rank;
+
+}
+
+document.getElementById("startBtn").onclick=startGame;
     }).addTo(map);
 
 });
