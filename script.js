@@ -1,97 +1,110 @@
+let map = L.map('map').setView([35.68,139.7],10);
 
-let map = L.map('map',{zoomControl:false}).setView([35.68,139.7],10)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© OpenStreetMap'
+}).addTo(map);
 
-let geoLayer
-let tokyoData
-
-let questions=[]
-let current=0
-let targetCity=null
+let geoLayer;
+let cities = [];
+let currentCity = null;
+let questionCount = 0;
+let correctCount = 0;
+let maxQuestion = 5;
 
 fetch("tokyo_cities.geojson")
 .then(res=>res.json())
 .then(data=>{
 
-tokyoData=data
+    geoLayer = L.geoJSON(data,{
+        style:{
+            color:"#006400",
+            weight:1,
+            fillColor:"#00aa00",
+            fillOpacity:0.5
+        },
+        onEachFeature:(feature,layer)=>{
 
-geoLayer=L.geoJSON(data,{
-style:{
-color:"#222",
-weight:1,
-fillColor:"#2ecc71",
-fillOpacity:0.7
-}
-}).addTo(map)
+            cities.push(feature);
 
-map.fitBounds(geoLayer.getBounds())
+            layer.on("click",()=>{
 
-})
+                if(!currentCity) return;
 
-document.getElementById("startBtn").onclick=function(){
+                let name = feature.properties.N03_004;
 
-questions=shuffle(tokyoData.features).slice(0,5)
-current=0
-nextQuestion()
+                if(name===currentCity){
 
+                    layer.setStyle({
+                        fillColor:"#00ff00"
+                    });
+
+                    correctCount++;
+
+                    alert("正解！ "+name);
+
+                }else{
+
+                    layer.setStyle({
+                        fillColor:"#ff0000"
+                    });
+
+                    alert("不正解 正解は "+currentCity);
+                }
+
+                questionCount++;
+
+                if(questionCount>=maxQuestion){
+
+                    setTimeout(showResult,500);
+
+                }else{
+
+                    setTimeout(nextQuestion,500);
+                }
+
+            });
+
+        }
+
+    }).addTo(map);
+
+});
+
+function startGame(){
+
+    questionCount=0;
+    correctCount=0;
+
+    nextQuestion();
 }
 
 function nextQuestion(){
 
-if(current>=5){
+    geoLayer.resetStyle();
 
-document.getElementById("question").innerHTML="ゲーム終了！"
-targetCity=null
-return
+    let r = Math.floor(Math.random()*cities.length);
 
+    currentCity = cities[r].properties.N03_004;
+
+    document.getElementById("question").innerText=
+    "第"+(questionCount+1)+"問 : "+currentCity;
 }
 
-targetCity=questions[current]
+function showResult(){
 
-document.getElementById("question").innerHTML="問題: "+targetCity.properties.N03_004
+    let rank="";
 
-current++
+    if(correctCount==5) rank="S";
+    else if(correctCount>=4) rank="A";
+    else if(correctCount>=3) rank="B";
+    else if(correctCount>=2) rank="C";
+    else rank="D";
 
+    document.getElementById("question").innerText=
+    "終了！ "+correctCount+" / 5 正解 ランク "+rank;
 }
 
-map.on("click",function(e){
-
-if(!targetCity)return
-
-let pt=turf.point([e.latlng.lng,e.latlng.lat])
-
-let inside=turf.booleanPointInPolygon(pt,targetCity)
-
-geoLayer.eachLayer(function(layer){
-
-if(layer.feature===targetCity){
-
-if(inside){
-
-layer.setStyle({fillColor:"#7CFF7C"})
-
-}else{
-
-layer.setStyle({fillColor:"#FF4C4C"})
-
-}
-
-}
-
-})
-
-setTimeout(nextQuestion,1500)
-
-})
-
-function shuffle(array){
-
-for(let i=array.length-1;i>0;i--){
-
-let j=Math.floor(Math.random()*(i+1))
-[array[i],array[j]]=[array[j],array[i]]
-
-}
-
+document.getElementById("startBtn").onclick=startGame;
 return array
 
 }
