@@ -16,7 +16,7 @@ fetch("tokyo_cities.geojson")
             color:"#006400",
             weight:1,
             fillColor:"#00aa00",
-            fillOpacity:0.5
+            fillOpacity:1
         },
         onEachFeature:(feature,layer)=>{
 
@@ -63,7 +63,7 @@ fetch("tokyo_cities.geojson")
         }
 
     }).addTo(map);
-
+map.fitBounds(geoLayer.getBounds());
 });
 
 function startGame(){
