@@ -8,7 +8,7 @@ let questions=[]
 let current=0
 let targetCity=null
 
-fetch("tokyo.geojson")
+fetch("tokyo_cities.geojson")
 .then(res=>res.json())
 .then(data=>{
 
@@ -47,7 +47,7 @@ return
 
 targetCity=questions[current]
 
-document.getElementById("question").innerHTML="問題: "+targetCity.properties.name
+document.getElementById("question").innerHTML="問題: "+targetCity.properties.N03_004
 
 current++
 
