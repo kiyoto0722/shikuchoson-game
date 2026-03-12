@@ -143,7 +143,9 @@ document.getElementById("shareBtn").onclick=function(){
     window.open(url);
 }
 
-document.getElementById("startBtn").onclick=startGame;
-document.getElementById("restartBtn").onclick=function(){
-    location.reload();
+window.onload = function(){
+    document.getElementById("startBtn").onclick=startGame;
+    document.getElementById("restartBtn").onclick=function(){
+        location.reload();
+    }
 }
