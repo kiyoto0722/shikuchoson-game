@@ -135,3 +135,4 @@ function showJudge(correct){
 }
 
 document.getElementById("startBtn").onclick=startGame;
+document.getElementById("startBtn").style.display="none";
