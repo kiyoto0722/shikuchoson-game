@@ -130,6 +130,19 @@ function showJudge(correct){
     },1000);
 }
 
+document.getElementById("shareBtn").onclick=function(){
+    let shareURL="https://x.gd/tokyomap";
+
+    let text =
+        "東京都 市区町村当てゲーム\n"+
+        "スコア "+correctCount+"/5\n"+shareURL;
+
+    let url="https://twitter.com/intent/tweet?text="+
+        encodeURIComponent(text);
+
+    window.open(url);
+}
+
 document.getElementById("startBtn").onclick=startGame;
 document.getElementById("restartBtn").onclick=function(){
     location.reload();
