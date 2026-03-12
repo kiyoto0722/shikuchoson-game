@@ -72,7 +72,8 @@ fetch("tokyo_cities.geojson")
         }
 
     }).addTo(map);
-map.fitBounds(geoLayer.getBounds());
+
+    //map.fitBounds(geoLayer.getBounds());
 });
 
 function startGame(){
