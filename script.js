@@ -35,6 +35,7 @@ fetch("tokyo_cities.geojson")
 
             layer.on("click",()=>{
 
+                if(gameOver) return;
                 if(!currentCity) return;
 
                 let name = feature.properties.N03_004;
