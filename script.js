@@ -83,7 +83,7 @@ fetch("tokyo_cities.geojson")
                     setTimeout(()=>{
                         answering = false;
                         nextQuestion();
-                    },500);
+                    },800);
                 }
 
             });
