@@ -70,11 +70,9 @@ fetch("tokyo_cities.geojson")
                 if(questionCount>=maxQuestion){
                     gameOver=true;
                     document.getElementById("finalScore").innerHTML=
-                        "スコア "+score+" / 5";
+                        "スコア "+correctCount+" / 5";
                     document.getElementById("gameoverPopup").style.display="flex";
                     return;
-                }
-
                 }else{
 
                     setTimeout(nextQuestion,500);
@@ -100,8 +98,6 @@ function startGame(){
 function nextQuestion(){
 
     geoLayer.resetStyle();
-
-    let r = Math.floor(Math.random()*cities.length);
 
     currentCity=cities[Math.floor(Math.random()*cities.length)];
 
