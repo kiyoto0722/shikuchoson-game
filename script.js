@@ -36,12 +36,12 @@ fetch("tokyo_cities.geojson")
 
                     correctCount++;
 
-                    alert("正解！ "+name);
+                    showResult(true);
 
                 }else{
 
                     layer.setStyle({
-                        fillColor:"#ff0000"
+                        fillColor:"#000000ff"
                     });
 
                     geoLayer.eachLayer(function(l){
@@ -49,7 +49,8 @@ fetch("tokyo_cities.geojson")
                             l.setStyle({fillColor:"#ff0000"});
                         }
                     });
-                    alert("不正解 正解は "+currentCity);
+
+                    showResult(false);
                 }
 
                 questionCount++;
@@ -103,6 +104,19 @@ function showResult(){
 
     document.getElementById("question").innerText=
     "終了！ "+correctCount+" / 5 正解 ランク "+rank;
+}
+
+function showResult(correct){
+
+let text = correct ? "○ 正解" : "✕ 不正解";
+
+let color = correct ? "red" : "blue";
+
+L.popup()
+.setLatLng(map.getCenter())
+.setContent("<div style='font-size:40px;color:"+color+"'>"+text+"</div>")
+.openOn(map);
+
 }
 
 document.getElementById("startBtn").onclick=startGame;
