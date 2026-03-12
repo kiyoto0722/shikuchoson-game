@@ -22,7 +22,14 @@ fetch("tokyo_cities.geojson")
 
             let name = feature.properties.N03_004;
             if(!cities.includes(name)){
-                cities.push(name);
+                if(
+                    name.endsWith("区") ||
+                    name.endsWith("市") ||
+                    name.endsWith("町") ||
+                    name.endsWith("村")
+                ){
+                    cities.push(name);
+                }
             }
 
             layer.on("click",()=>{
@@ -112,14 +119,19 @@ function showResult(){
 
 function showJudge(correct){
 
-    let text = correct ? "○ 正解" : "✕ 不正解";
+    const result=document.getElementById("result");
 
-    let color = correct ? "red" : "blue";
+    if(correct){
+        result.innerHTML="⭕";
+        result.style.color="red";
+    }else{
+        result.innerHTML="✕";
+        result.style.color="blue";
+    }
 
-    L.popup()
-    .setLatLng(map.getCenter())
-    .setContent("<div style='font-size:40px;color:"+color+"'>"+text+"</div>")
-    .openOn(map);
+    setTimeout(()=>{
+        result.innerHTML="";
+    },1000);
 }
 
 document.getElementById("startBtn").onclick=startGame;
