@@ -8,6 +8,7 @@ let correctCount = 0;
 let maxQuestion = 5;
 let gameOver=false;
 let answering = false;
+let usedCities = [];
 
 fetch("tokyo_cities.geojson")
 .then(res=>res.json())
@@ -99,6 +100,7 @@ function startGame(){
 
     questionCount=0;
     correctCount=0;
+    usedCities=[];
 
     nextQuestion();
 }
@@ -107,7 +109,9 @@ function nextQuestion(){
 
     geoLayer.resetStyle();
 
-    currentCity=cities[Math.floor(Math.random()*cities.length)];
+    let remaining = cities.filter(c => !usedCities.includes(c));
+    currentCity = remaining[Math.floor(Math.random()*remaining.length)];
+    usedCities.push(currentCity);
 
     document.getElementById("question").innerText=
     "第"+(questionCount+1)+"問 : "+currentCity;
