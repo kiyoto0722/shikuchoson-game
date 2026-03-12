@@ -20,7 +20,10 @@ fetch("tokyo_cities.geojson")
         },
         onEachFeature:(feature,layer)=>{
 
-            cities.push(feature);
+            let name = feature.properties.N03_004;
+            if(!cities.includes(name)){
+                cities.push(name);
+            }
 
             layer.on("click",()=>{
 
@@ -86,7 +89,7 @@ function nextQuestion(){
 
     let r = Math.floor(Math.random()*cities.length);
 
-    currentCity = cities[r].properties.N03_004;
+    currentCity=cities[Math.floor(Math.random()*cities.length)];
 
     document.getElementById("question").innerText=
     "第"+(questionCount+1)+"問 : "+currentCity;
