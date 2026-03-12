@@ -44,6 +44,11 @@ fetch("tokyo_cities.geojson")
                         fillColor:"#ff0000"
                     });
 
+                    geoLayer.eachLayer(function(l){
+                        if(l.feature.properties.N03_004===currentCity){
+                            l.setStyle({fillColor:"#ff0000"});
+                        }
+                    });
                     alert("不正解 正解は "+currentCity);
                 }
 
