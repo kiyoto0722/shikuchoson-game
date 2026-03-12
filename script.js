@@ -7,6 +7,7 @@ let questionCount = 0;
 let correctCount = 0;
 let maxQuestion = 5;
 let gameOver=false;
+let answering = false;
 
 fetch("tokyo_cities.geojson")
 .then(res=>res.json())
@@ -36,7 +37,10 @@ fetch("tokyo_cities.geojson")
             layer.on("click",()=>{
 
                 if(gameOver) return;
+                if(answering) return;
                 if(!currentCity) return;
+
+                answering = true;
 
                 let name = feature.properties.N03_004;
 
@@ -69,13 +73,17 @@ fetch("tokyo_cities.geojson")
 
                 if(questionCount>=maxQuestion){
                     gameOver=true;
-                    document.getElementById("finalScore").innerHTML=
-                        "スコア "+correctCount+" / 5";
-                    document.getElementById("gameoverPopup").style.display="flex";
+                    setTimeout(()=>{
+                        document.getElementById("finalScore").innerHTML =
+                            "スコア "+correctCount+" / 5";
+                        document.getElementById("gameoverPopup").style.display="flex";
+                    },1000);
                     return;
                 }else{
-
-                    setTimeout(nextQuestion,500);
+                    setTimeout(()=>{
+                        answering = false;
+                        nextQuestion();
+                    },500);
                 }
 
             });
@@ -104,20 +112,6 @@ function nextQuestion(){
     document.getElementById("question").innerText=
     "第"+(questionCount+1)+"問 : "+currentCity;
 }
-
-//function showResult(){
-
-//    let rank="";
-
-//    if(correctCount==5) rank="S";
-//    else if(correctCount>=4) rank="A";
-//    else if(correctCount>=3) rank="B";
-//    else if(correctCount>=2) rank="C";
-//    else rank="D";
-
-//    document.getElementById("question").innerText=
-//    "終了！ "+correctCount+" / 5 正解 ランク "+rank;
-//}
 
 function showJudge(correct){
 
